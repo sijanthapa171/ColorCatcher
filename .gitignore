@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.vscode/
+.env
+.env.local
+*.log
+.DS_Store
+*.tsbuildinfo
+
+# Editor directories
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

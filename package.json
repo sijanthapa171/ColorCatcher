@@ -1,0 +1,30 @@
+{
+  "name": "color-theme-extractor",
+  "version": "1.0.0",
+  "description": "A library to extract and adjust theme colors from images",
+  "main": "dist/color-theme-extractor.umd.js",
+  "module": "dist/color-theme-extractor.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "dev": "vite",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "color",
+    "theme",
+    "extract",
+    "palette"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "colorthief": "^2.4.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4"
+  }
+}

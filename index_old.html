@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Theme Extractor Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .color-section {
+            margin: 20px 0;
+        }
+        .color-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .color-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-shadow: 0 0 2px rgba(0,0,0,0.5);
+        }
+        .color-name {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .color-value {
+            font-size: 12px;
+        }
+        #imagePreview {
+            max-width: 100%;
+            margin-top: 20px;
+            max-height: 300px;
+            object-fit: contain;
+        }
+        .section-title {
+            margin-top: 30px;
+            color: #333;
+        }
+        .dark-mode {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Color Theme Extractor Demo</h1>
+    <input type="file" id="imageInput" accept="image/*">
+    <div>
+        <img id="imagePreview">
+    </div>
+
+    <h2 class="section-title">Light mode variant</h2>
+    <div id="lightVariants" class="color-display"></div>
+
+    <h2 class="section-title">shadow color</h2>
+    <div id="shadowColors" class="color-display"></div>
+
+    <div class="dark-mode">
+        <h2 class="section-title">Dark mode variants</h2>
+        <div id="darkVariants" class="color-display"></div>
+    </div>
+
+    <script type="module">
+        const { ColorThemeExtractor } = await import('./dist/color-theme-extractor.mjs');
+
+        const extractor = new ColorThemeExtractor();
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+
+        function createColorBox(name, color, container) {
+            const box = document.createElement('div');
+            box.className = 'color-box';
+            
+            let backgroundColor;
+            let colorValue;
+            
+            if (typeof color === 'string') {
+                backgroundColor = color;
+                colorValue = color;
+            } else if ('a' in color) {
+                backgroundColor = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
+                colorValue = backgroundColor;
+            } else {
+                backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                colorValue = backgroundColor;
+            }
+            
+            box.style.backgroundColor = backgroundColor;
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'color-name';
+            nameSpan.textContent = name;
+            
+            const valueSpan = document.createElement('span');
+            valueSpan.className = 'color-value';
+            valueSpan.textContent = colorValue;
+            
+            box.appendChild(nameSpan);
+            box.appendChild(valueSpan);
+            container.appendChild(box);
+        }
+
+        imageInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreview.onload = async () => {
+                        const mainColor = await extractor.extractMainColor(imagePreview);
+                        const adjustedColor = extractor.adjustColor(mainColor);
+                        const fullScheme = extractor.generateFullColorScheme(adjustedColor);
+
+                        // Clear existing display
+                        document.getElementById('lightVariants').innerHTML = '';
+                        document.getElementById('shadowColors').innerHTML = '';
+                        document.getElementById('darkVariants').innerHTML = '';
+
+                        // Show light variant
+                        Object.entries(fullScheme.lightVariants).forEach(([key, color]) => {
+                            createColorBox(`color-${key}`, color, document.getElementById('lightVariants'));
+                        });
+
+                        // Show shadow color
+                        Object.entries(fullScheme.shadowColors).forEach(([key, color]) => {
+                            createColorBox(key, color, document.getElementById('shadowColors'));
+                        });
+
+                        // Show dark variant
+                        Object.entries(fullScheme.darkModeVariants).forEach(([key, color]) => {
+                            createColorBox(`dark-${key}`, color, document.getElementById('darkVariants'));
+                        });
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html> 

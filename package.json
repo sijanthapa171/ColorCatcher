@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build && tsc --emitDeclarationOnly",
+    "build": "vite build",
     "dev": "vite",
     "preview": "vite preview"
   },
@@ -22,9 +22,12 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.11.24",
-    "colorthief": "^2.4.0",
+    "terser": "^5.39.0",
     "typescript": "^5.3.3",
-    "vite": "^5.1.4"
+    "vite": "^5.2.8"
+  },
+  "dependencies": {
+    "@material/material-color-utilities": "^0.3.0",
+    "colorthief": "^2.4.0"
   }
 }

@@ -17,7 +17,6 @@ export interface HSL {
   l: number;
 }
 
-// Make sure to insert the style after the DOM is loaded
 function injectViewTransitionStyles() {
   if (document.head.querySelector('#view-transition-styles')) return;
 
@@ -43,7 +42,6 @@ function injectViewTransitionStyles() {
       }
   `;
   
-// Use a more reliable insertion method
   if (document.head.firstChild) {
       document.head.insertBefore(style, document.head.firstChild);
   } else {
@@ -52,12 +50,17 @@ function injectViewTransitionStyles() {
 }
 export class ColorThemeExtractor {
   private colorThief: ColorThief;
+  private needTransition: boolean;
 
-  constructor() {
+  constructor({
+    needTransition = true,
+  } = {}) {
     this.colorThief = new ColorThief();
+    this.needTransition = needTransition;
 
-// Add a style tag at the end of the title to support subsequent custom animations
-    injectViewTransitionStyles();
+    if (needTransition) {
+      injectViewTransitionStyles();
+    }
   }
 
   hexFromArgb(argb: number) {
@@ -75,7 +78,6 @@ export class ColorThemeExtractor {
       startY = 0;
     }
 
- // Calculate the radius, with the mouse click position as the center of the circle and the largest distance from the four corners as the radius
     const radius = Math.hypot(
       Math.max(startX, innerWidth - startX),
       Math.max(startY, innerHeight - startY)
@@ -84,15 +86,12 @@ export class ColorThemeExtractor {
       `circle(0% at ${startX}px ${startY}px)`,
       `circle(${radius}px at ${startX}px ${startY}px)`,
     ];
-// Custom animation
     document.documentElement.animate(
       {
-// If we want to switch to a dark theme, we start with a circle with a radius of 100% and end with a circle with a radius of 0% during the transition
         clipPath: reverse ? clipPath.reverse() : clipPath,
       },
       {
         duration: 350,
-        // If we want to switch to a dark theme, we should clip the content of view-transition-old(root)
         pseudoElement: reverse
           ? "::view-transition-old(root)"
           : "::view-transition-new(root)",
@@ -110,12 +109,15 @@ export class ColorThemeExtractor {
     }
   ): void {
 
+    if (!this.needTransition) {
+      applyTheme(theme, options);
+      return;
+    }
+
     const transition = document.startViewTransition(() => {
-     // Modify the DOM state in startViewTransition to generate animation
       applyTheme(theme, options);
 
       document.body.classList.add("apply-bg");
-      // Set the background color of the pseudo element
       const bgColor = this.hexFromArgb(
         theme.schemes.light.props.primaryContainer
       );
@@ -147,9 +149,6 @@ export class ColorThemeExtractor {
     });
   }
 
-  /**
-   * Extract the main color from the image
-   */
   async extractMainColor(imageSource: string | HTMLImageElement): Promise<RGB> {
     let img: HTMLImageElement;
 
@@ -170,10 +169,6 @@ export class ColorThemeExtractor {
     }
     return { r: color[0], g: color[1], b: color[2] };
   }
-
-  /**
-   *Use the color of the material you
-   */
 
   generateThemeScheme(baseColor: RGB) {
     const source = (baseColor.r << 16) | (baseColor.g << 8) | baseColor.b;

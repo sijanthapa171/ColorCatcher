@@ -34,34 +34,6 @@ const adjustedColor = extractor.adjustColor(mainColor);
 const colorScheme = extractor.generateFullColorScheme(adjustedColor);
 ```
 
-## API document
-
-### ColorThemeExtractor
-
-#### extractMainColor(imageSource: string | HTMLImageElement): Promise<RGB>
-Extract dominant colors from an image.
-
-#### adjustColor(color: RGB): RGB
-Adjust the color to ensure it is suitable as the theme color, automatically adjusting the saturation and brightness to the appropriate range.
-
-#### generateFullColorScheme(baseColor: RGB)
-Generates a complete color variant system including:
-
-- lightVariants: light mode variants
-- red-0: darkest version
-- red-1 to red-2: gradient transition colors
-- red-3: main color
-- red-4 to red-6: gradient light colors
-- red-5-5: special transition colors
-
-- shadowColors: shadow colors
-- red-3-shadow: dark shadow of main color
-- red-6-shadow: shadow of light version
-
-- darkModeVariants: dark mode variants
-- dark-0: dark main color
-- dark-4 to dark-6: light variants with transparency
-
 ### type definition
 
 ```typescript

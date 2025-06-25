@@ -15,6 +15,9 @@ This is a browser-based color theme extraction tool that can extract the main co
 - CSS variables
 - Hexadecimal color code
 
+## Demo video 
+
+![Demo](./demo.mp4)
 
 ### Use in projects
 

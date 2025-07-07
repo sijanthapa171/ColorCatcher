@@ -20,11 +20,11 @@ This is a browser-based color theme extraction tool that can extract the main co
 
 ## Demo
 
-https://github.com/sijanthapa171/ColorCatcher/assets/demo.mp4
+<video src="demo.mp4" width="100%" controls></video>
 
 ## Live Demo
 
-Check out the live demo: [Color Theme Extractor](https://color-catcher-sigma.vercel.app/)
+Check out the live demo: [Color Theme Extractor](https://colorcatcheer.vercel.app/)
 
 ## Usage
 

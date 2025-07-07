@@ -20,11 +20,14 @@ This is a browser-based color theme extraction tool that can extract the main co
 
 ## Demo
 
-<video src="demo.mp4" width="100%" controls></video>
+<div align="center">
+  <video src="demo.mp4" width="100%" controls="controls" muted="muted" style="max-width:800px;">
+  </video>
+</div>
 
 ## Live Demo
 
-Check out the live demo: [Color Theme Extractor](https://colorcatcheer.vercel.app/)
+Check out the live demo: [Color Theme Extractor](https://colorcatcher.vercel.app/)
 
 ## Usage
 
